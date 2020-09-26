@@ -284,7 +284,9 @@ void Xbox::MMIOWriteCallback(void *context, uint64_t address, size_t size, uint6
     xbox->MMIOWrite(address, size, value);
 }
 
-#include <Windows.h>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 uint32_t Xbox::IORead(uint16_t port, size_t size) 
 {
