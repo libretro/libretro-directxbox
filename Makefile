@@ -67,6 +67,7 @@ ifneq (,$(findstring unix,$(platform)))
    else
    LDFLAGS += -lrt
    endif
+	LINUX_VERSION=1
    
    # Raspberry Pi
    ifneq (,$(findstring rpi,$(platform)))
