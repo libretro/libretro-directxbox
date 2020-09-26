@@ -1,4 +1,4 @@
-DirectXbox is a work-in-progress XBox OG emulator, written from the ground up for Libretro.
+DirectXbox is an experimental work-in-progress XBox OG emulator, written from the ground up for Libretro.
 
 Currently requires the following BIOS images to be placed in the System directory:
 * mcpx_1.0.bin
