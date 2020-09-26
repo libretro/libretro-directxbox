@@ -1,0 +1,64 @@
+SOURCES_CXX :=
+SOURCES_C   :=
+
+DEPS_DIR     	  := $(CORE_DIR)/deps
+LIBRETRO_COMM_DIR := $(CORE_DIR)/libretro-common
+
+INCFLAGS := -I$(CORE_DIR)/src \
+				-I$(CORE_DIR)/src/libretro
+
+SOURCES_C   :=
+SOURCES_CXX :=
+
+ifneq (,$(findstring msvc2003,$(platform)))
+	INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc
+endif
+
+SOURCES_CXX += \
+					$(CORE_DIR)/src/xbox.cpp \
+					$(CORE_DIR)/src/xbox_database.cpp \
+					$(CORE_DIR)/src/libretro/libretro.cpp \
+					\
+					$(CORE_DIR)/src/devices/eeprom.cpp \
+					$(CORE_DIR)/src/devices/i8254.cpp \
+					$(CORE_DIR)/src/devices/i8259.cpp \
+					$(CORE_DIR)/src/devices/smbus.cpp \
+					$(CORE_DIR)/src/devices/smc.cpp \
+					$(CORE_DIR)/src/devices/ata/ata_controller.cpp \
+					$(CORE_DIR)/src/devices/audio/ac97/ac97.cpp \
+					$(CORE_DIR)/src/devices/audio/mcpx/mcpx_apu.cpp \
+					$(CORE_DIR)/src/devices/pci/agp_bridge.cpp \
+					$(CORE_DIR)/src/devices/pci/host_bridge.cpp \
+					$(CORE_DIR)/src/devices/pci/pci.cpp \
+					$(CORE_DIR)/src/devices/pci/pci_bridge.cpp \
+					$(CORE_DIR)/src/devices/pci/pci_bus.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/nv2a.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/pbus.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/pcounter.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/pcrtc.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/pfb.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/pfifo.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/pgraph.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/pmc.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/pramdac.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/pramin.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/prma.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/prmcio.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/prmdio.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/prmfb.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/prmvio.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/pstraps.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/ptimer.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/ptv.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/pvideo.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/pvpe.cpp \
+					$(CORE_DIR)/src/devices/video/nv2a/user.cpp \
+					$(CORE_DIR)/src/devices/video/tv/conexant.cpp
+
+ifeq ($(FRONTEND_SUPPORTS_RGB565), 1)
+	FLAGS += -DFRONTEND_SUPPORTS_RGB565
+endif
+
+ifneq ($(STATIC_LINKING), 1)
+	SOURCES_C +=
+endif

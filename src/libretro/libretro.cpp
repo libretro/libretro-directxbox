@@ -86,7 +86,7 @@ void retro_set_controller_port_device(unsigned port, unsigned device)
 void retro_get_system_info(struct retro_system_info *info)
 {
     memset(info, 0, sizeof(*info));
-    info->library_name = "libretro-xbox";
+    info->library_name = "DirectX Box";
     info->library_version = "alpha";
     info->need_fullpath = true;
     info->valid_extensions = "iso";
