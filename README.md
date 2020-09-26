@@ -12,6 +12,9 @@ We currently are supporting only two platforms. We might be expanding our scope 
 # Requirements/dependencies:
 * Libvirt86
 
+# License
+GPL v2+
+
 # Status
 + PCI/ISA/SMBUS devices are partially implemented
 + Enough of the GPU is implemented for direct framebuffer access to work 
