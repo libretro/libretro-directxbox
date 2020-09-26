@@ -15,6 +15,11 @@ We currently are supporting only two platforms. We might be expanding our scope 
 # License
 GPL v2+
 
+# How to compile
+Originally it was supposed to be built with CMake.
+
+However, static Makefiles have been written now, and they have been tested to compile and link on Windows and Linux. To use them, just type make in the root directory. Once complete, it will create a file called 'directxbox_libretro.{extensionname}.
+
 # Status
 + PCI/ISA/SMBUS devices are partially implemented
 + Enough of the GPU is implemented for direct framebuffer access to work 
