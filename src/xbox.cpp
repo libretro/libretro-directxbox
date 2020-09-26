@@ -115,7 +115,7 @@ void Xbox::Shutdown()
 #ifdef _WIN32
         _aligned_free(m_pRam);
 #else
-        aligned_free(m_pRam);
+        free(m_pRam);
 #endif
         m_pRam = nullptr;
     }
@@ -124,7 +124,7 @@ void Xbox::Shutdown()
 #ifdef _WIN32
         _aligned_free(m_pFlashRegion);
 #else
-        aligned_free(m_pFlashRegion);
+        free(m_pFlashRegion);
 #endif
         m_pFlashRegion = nullptr;
     }
