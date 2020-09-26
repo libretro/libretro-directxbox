@@ -2,7 +2,7 @@
 #include "util.h"
 #include "mcpx_apu.h"
 
-// TODO: Everything
+/* TODO: Everything */
 
 #define APU_VP_BASE 0x20000
 #define APU_VP_SIZE 0x10000
@@ -15,29 +15,29 @@
 
 McpxApu::McpxApu()
     : PCIDevice(PCI_HEADER_TYPE_NORMAL, PCI_VENDOR_ID_NVIDIA, 0x01B0, 0xB1,
-        0x04, 0x01, 0x00) // Multimedia Audio Controller
+        0x04, 0x01, 0x00) /* Multimedia Audio Controller */
 {
 }
 
 McpxApu::~McpxApu() {
 }
 
-// PCI Device functions
+/* PCI Device functions */
 
 void McpxApu::Init() {
-    RegisterBAR(0, 0x80000, PCI_BAR_TYPE_MEMORY); // 0xFE800000 - 0xFE87FFFF
+    RegisterBAR(0, 0x80000, PCI_BAR_TYPE_MEMORY); /* 0xFE800000 - 0xFE87FFFF */
 
-    // Initialize configuration space
+    /* Initialize configuration space */
     Write16(m_configSpace, PCI_STATUS, PCI_STATUS_FAST_BACK | PCI_STATUS_66MHZ | PCI_STATUS_CAP_LIST);
     Write8(m_configSpace, PCI_CAPABILITY_LIST, 0x44);
     Write8(m_configSpace, PCI_MIN_GNT, 0x01);
     Write8(m_configSpace, PCI_MAX_LAT, 0x0c);
 
-    // Capability list
+    /* Capability list */
     Write8(m_configSpace, 0x44, PCI_CAP_ID_PM);
     Write8(m_configSpace, 0x45, 0x00);
 
-    // Unknown registers
+    /* Unknown registers */
     Write16(m_configSpace, 0x46, 0x2);
     Write32(m_configSpace, 0x4c, 0x50a);
     for (uint8_t i = 0; i < 0x100 - 0x50; i += 4) {
@@ -114,8 +114,10 @@ void McpxApu::GPWrite(uint32_t addr, uint32_t value, unsigned size)
 
 uint32_t McpxApu::VPRead(uint32_t addr, unsigned size)
 {
-    switch (addr) {
-        case 0x10: return 0x80; // HACK: Pretend the FIFO is always empty, bypasses hangs when APU isn't fully implemented
+    switch (addr)
+    {
+       case 0x10:
+          return 0x80; /* HACK: Pretend the FIFO is always empty, bypasses hangs when APU isn't fully implemented */
     }
 
     Log(LogLevel::Warning, "McpxApu:  Unimplemented VP MMIORead %X\n", addr);

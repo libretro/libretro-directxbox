@@ -5,11 +5,11 @@
 
 class AGPBridge : public PCIBridge 
 {
-public:
-    // constructor
-    AGPBridge();
-    virtual ~AGPBridge();
+   public:
+      /* constructor */
+      AGPBridge();
+      virtual ~AGPBridge();
 
-    // PCI Device functions
-    void Init() override;
+      /* PCI Device functions */
+      void Init() override;
 };

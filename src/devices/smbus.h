@@ -30,7 +30,7 @@ class Xbox;
 #define AMD756_PROCESS_CALL 0x04
 #define AMD756_BLOCK_DATA   0x05
 
-// SMB_GLOBAL_STATUS flags
+/* SMB_GLOBAL_STATUS flags */
 #define GS_ABRT_STS (1 << 0)
 #define GS_COL_STS  (1 << 1)
 #define GS_PRERR_STS    (1 << 2)
@@ -47,38 +47,39 @@ class Xbox;
 #define GE_HCYC_EN      (1 << 4)
 #define GE_ABORT        (1 << 5)
 
-class SMBus : public PCIDevice {
-    public:
-        SMBus(Xbox& xbox);
-        ~SMBus();
+class SMBus : public PCIDevice
+{
+   public:
+      SMBus(Xbox& xbox);
+      ~SMBus();
 
-        // PCI Functions
-        void Init();
-        void Reset();
+      /* PCI Functions */
+      void Init();
+      void Reset();
 
-        uint32_t IORead(int barIndex, uint32_t addr, unsigned size = sizeof(uint8_t));
-        void IOWrite(int barIndex, uint32_t addr, uint32_t data, unsigned size = sizeof(uint8_t));
+      uint32_t IORead(int barIndex, uint32_t addr, unsigned size = sizeof(uint8_t));
+      void IOWrite(int barIndex, uint32_t addr, uint32_t data, unsigned size = sizeof(uint8_t));
 
-        uint32_t MMIORead(int barIndex, uint32_t addr, unsigned size);
-        void MMIOWrite(int barIndex, uint32_t addr, uint32_t value, unsigned size);
+      uint32_t MMIORead(int barIndex, uint32_t addr, unsigned size);
+      void MMIOWrite(int barIndex, uint32_t addr, uint32_t value, unsigned size);
 
-        // Misc
-        void ConnectDevice(uint8_t addr, SMDevice *device);
+      /* Misc */
+      void ConnectDevice(uint8_t addr, SMDevice *device);
 
-    private:
-        Xbox& m_Xbox;
-        uint8_t m_Status;
-        uint8_t m_Control;
-        uint8_t m_Command;
-        uint8_t m_Address;
-        uint8_t m_Data0;
-        uint8_t m_Data1;
-        uint8_t m_Data[32];
-        uint8_t m_Index;
+   private:
+      Xbox& m_Xbox;
+      uint8_t m_Status;
+      uint8_t m_Control;
+      uint8_t m_Command;
+      uint8_t m_Address;
+      uint8_t m_Data0;
+      uint8_t m_Data1;
+      uint8_t m_Data[32];
+      uint8_t m_Index;
 
-        void ExecuteTransaction();
+      void ExecuteTransaction();
 
-        std::map<uint8_t, SMDevice*> m_Devices;
+      std::map<uint8_t, SMDevice*> m_Devices;
 };
 
 #endif

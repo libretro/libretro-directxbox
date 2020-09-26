@@ -29,32 +29,34 @@
 #define SMC_SCRATCH_SHORT_ANIMATION        0x04
 #define SMC_SCRATCH_DASHBOARD_BOOT        0x08
 
-typedef enum {
+typedef enum
+{
     P01,
     P2L,
-    D01, // Seen in a debug kit 
-    D05, // Seen in a earlier model chihiro
+    D01, /* Seen in a debug kit  */
+    D05, /* Seen in a earlier model chihiro */
 } SCMRevision;
 
-class SMC : public SMDevice {
-public:
-    // SMDevice functions
-    void Init();
-    void Reset();
+class SMC : public SMDevice
+{
+   public:
+      /* SMDevice functions */
+      void Init();
+      void Reset();
 
-    void QuickCommand(bool read);
-    uint8_t ReceiveByte();
-    uint8_t ReadByte(uint8_t command);
-    uint16_t ReadWord(uint8_t command);
-    int ReadBlock(uint8_t command, uint8_t *data);
+      void QuickCommand(bool read);
+      uint8_t ReceiveByte();
+      uint8_t ReadByte(uint8_t command);
+      uint16_t ReadWord(uint8_t command);
+      int ReadBlock(uint8_t command, uint8_t *data);
 
-    void SendByte(uint8_t data);
-    void WriteByte(uint8_t command, uint8_t value);
-    void WriteWord(uint8_t command, uint16_t value);
-    void WriteBlock(uint8_t command, uint8_t* data, int length);
+      void SendByte(uint8_t data);
+      void WriteByte(uint8_t command, uint8_t value);
+      void WriteWord(uint8_t command, uint16_t value);
+      void WriteBlock(uint8_t command, uint8_t* data, int length);
 
-private:
-    SCMRevision m_revision = SCMRevision::P01;
-    int m_PICVersionStringIndex = 0;
-    uint8_t buffer[256] = {};
+   private:
+      SCMRevision m_revision = SCMRevision::P01;
+      int m_PICVersionStringIndex = 0;
+      uint8_t buffer[256] = {};
 };
