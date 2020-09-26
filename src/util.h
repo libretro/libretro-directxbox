@@ -2,6 +2,7 @@
 #define _UTIL_H
 
 #include <cstdint>
+#include <cstddef>
 
 enum class LogLevel {
     Info,
@@ -17,7 +18,9 @@ constexpr size_t array_size(T(&)[N]) {
     return N;
 }
 
-#if !defined(__linux__)
+#if defined(__linux__)
+#include <strings.h>
+#else
 static int ffs(int value)
 {
     int bit;

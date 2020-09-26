@@ -2,6 +2,7 @@
 #include "util.h"
 
 #include <cassert>
+#include <cstring>
 
 PCIBus::PCIBus() {
     m_owner = nullptr;
