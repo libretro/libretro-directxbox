@@ -26,14 +26,22 @@ bool Xbox::Init()
     }
 
     // Allocate Xbox Memory
-    // TODO: Platform independent layer instead of _aligned_malloc
+    // TODO: Platform independent layer
+#ifdef _WIN32
     m_pRam = _aligned_malloc(128 * MiB, PAGE_SIZE);
+#else
+    m_pRam = aligned_alloc(128 * MiB, PAGE_SIZE);
+#endif
     if (m_pRam == nullptr) {
         Log(LogLevel::Error, "Failed to allocate Xbox RAM\n");
         return false;
     }
 
+#ifdef _WIN32
     m_pFlashRegion = _aligned_malloc(FLASH_REGION_SIZE, PAGE_SIZE);
+#else
+    m_pFlashRegion = aligned_alloc(FLASH_REGION_SIZE, PAGE_SIZE);
+#endif
     if (m_pRam == nullptr) {
         Log(LogLevel::Error, "Failed to allocate Flash memory region\n");
         return false;
@@ -104,12 +112,20 @@ void Xbox::Shutdown()
 
     // Free memory
     if (m_pRam != nullptr) {
+#ifdef _WIN32
         _aligned_free(m_pRam);
+#else
+        aligned_free(m_pRam);
+#endif
         m_pRam = nullptr;
     }
 
     if (m_pFlashRegion != nullptr) {
+#ifdef _WIN32
         _aligned_free(m_pFlashRegion);
+#else
+        aligned_free(m_pFlashRegion);
+#endif
         m_pFlashRegion = nullptr;
     }
 
