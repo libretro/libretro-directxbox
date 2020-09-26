@@ -1,6 +1,6 @@
-#include "Xbox.h"
-#include "I8254.h"
-#include "I8259.h"
+#include "xbox.h"
+#include "i8254.h"
+#include "i8259.h"
 #include <chrono>
 #include "util.h"
 
