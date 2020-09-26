@@ -20,4 +20,4 @@ Cromwell BIOS can only boot images, but not games.
 
 Microsoft BIOS doesn't work yet (too much hardware that isn't implemented yet like ATA & OCHI)
 
-![Cromwell](/cromwell.png)
+![Cromwell](docs/cromwell.png)
