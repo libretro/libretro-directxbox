@@ -306,91 +306,98 @@ void Xbox::MMIOWriteCallback(void *context, uint64_t address, size_t size, uint6
 
 uint32_t Xbox::IORead(uint16_t port, size_t size) 
 {
-    // First, attempt to handle static IO Mapped Devices
-    switch (port) {
-        case 0x8008: { // TODO : Move 0x8008 TIMER to a device
-            if (size == sizeof(uint32_t)) {
-                // HACK: This is very wrong.
-                // This timer should count at a specific frequency (3579.545 ticks per ms)
-                // But this is enough to keep NXDK from hanging for now.
-                LARGE_INTEGER performanceCount;
-                QueryPerformanceCounter(&performanceCount);
-                return static_cast<uint32_t>(performanceCount.QuadPart);
-            }
-            break;
-        }
-        case PORT_PIC_MASTER_COMMAND:
-        case PORT_PIC_MASTER_DATA:
-        case PORT_PIC_SLAVE_COMMAND:
-        case PORT_PIC_SLAVE_DATA:
-        case PORT_PIC_MASTER_ELCR:
-        case PORT_PIC_SLAVE_ELCR:
-            return m_I8259.IORead(port);
-        case PORT_PIT_DATA_0:
-        case PORT_PIT_DATA_1:
-        case PORT_PIT_DATA_2:
-        case PORT_PIT_COMMAND:
-            return m_I8254.IORead(port);
-    }
+   uint32_t value = 0;
+   /* First, attempt to handle static IO Mapped Devices */
+   switch (port)
+   {
+      case 0x8008:
+         /* TODO : Move 0x8008 TIMER to a device */
 
-    // Map VGA register to NV2A PRMCIO
-    if (port >= 0x3C0 && port <= 0x3DF) {
-        return m_Nv2a.Prmcio.Read(port, size);
-    }
+         if (size == sizeof(uint32_t))
+         {
+#ifdef _WIN32
+            /* HACK: This is very wrong.
+             * This timer should count at a specific frequency 
+             * (3579.545 ticks per ms)
+             * But this is enough to keep NXDK from hanging for now. */
+            LARGE_INTEGER performanceCount;
+            QueryPerformanceCounter(&performanceCount);
+            return static_cast<uint32_t>(performanceCount.QuadPart);
+#else
+            /* TODO/FIXME - implement alternative here for non-Windows targets */
+#endif
+         }
+         break;
+      case PORT_PIC_MASTER_COMMAND:
+      case PORT_PIC_MASTER_DATA:
+      case PORT_PIC_SLAVE_COMMAND:
+      case PORT_PIC_SLAVE_DATA:
+      case PORT_PIC_MASTER_ELCR:
+      case PORT_PIC_SLAVE_ELCR:
+         return m_I8259.IORead(port);
+      case PORT_PIT_DATA_0:
+      case PORT_PIT_DATA_1:
+      case PORT_PIT_DATA_2:
+      case PORT_PIT_COMMAND:
+         return m_I8254.IORead(port);
+   }
 
-    // Next, PCI
-    uint32_t value = 0;
-    if (!m_Pci.IORead(port, &value, size)) {
-        Log(LogLevel::Warning, "Unhandled IO Read (Port = %04X)\n", port);
-    }
+   /* Map VGA register to NV2A PRMCIO */
+   if (port >= 0x3C0 && port <= 0x3DF)
+      return m_Nv2a.Prmcio.Read(port, size);
 
-    return value;
+   /* Next, PCI */
+   if (!m_Pci.IORead(port, &value, size))
+      Log(LogLevel::Warning, "Unhandled IO Read (Port = %04X)\n", port);
+
+   return value;
 }
 
 void Xbox::IOWrite(uint16_t port, size_t size, uint32_t value) 
 {
-    // First attempt to handle static IO Mapped Devices
-    switch (port) {
-        case PORT_PIC_MASTER_COMMAND:
-        case PORT_PIC_MASTER_DATA:
-        case PORT_PIC_SLAVE_COMMAND:
-        case PORT_PIC_SLAVE_DATA:
-        case PORT_PIC_MASTER_ELCR:
-        case PORT_PIC_SLAVE_ELCR:
-            m_I8259.IOWrite(port, value);
-            return;
-        case PORT_PIT_DATA_0:
-        case PORT_PIT_DATA_1:
-        case PORT_PIT_DATA_2:
-        case PORT_PIT_COMMAND:
-            m_I8254.IOWrite(port, value);
-            return;
-    }
+   /* First attempt to handle static IO Mapped Devices */
+   switch (port)
+   {
+      case PORT_PIC_MASTER_COMMAND:
+      case PORT_PIC_MASTER_DATA:
+      case PORT_PIC_SLAVE_COMMAND:
+      case PORT_PIC_SLAVE_DATA:
+      case PORT_PIC_MASTER_ELCR:
+      case PORT_PIC_SLAVE_ELCR:
+         m_I8259.IOWrite(port, value);
+         return;
+      case PORT_PIT_DATA_0:
+      case PORT_PIT_DATA_1:
+      case PORT_PIT_DATA_2:
+      case PORT_PIT_COMMAND:
+         m_I8254.IOWrite(port, value);
+         return;
+   }
 
-    // Map VGA register to NV2A PRMCIO
-    if (port >= 0x3C0 && port <= 0x3DF) {
-        m_Nv2a.Prmcio.Write(port, value, size);
-        return;
-    }
+   /* Map VGA register to NV2A PRMCIO */
+   if (port >= 0x3C0 && port <= 0x3DF)
+   {
+      m_Nv2a.Prmcio.Write(port, value, size);
+      return;
+   }
 
-    // Next, PCI
-    if (!m_Pci.IOWrite(port, value, size)) {
-        Log(LogLevel::Warning, "Unhandled IO Write (Port = %04X, Value = %08X)\n", port, value);
-    }
+   /* Next, PCI */
+   if (!m_Pci.IOWrite(port, value, size))
+   {
+      Log(LogLevel::Warning, "Unhandled IO Write (Port = %04X, Value = %08X)\n", port, value);
+   }
 }
 
 uint64_t Xbox::MMIORead(uint64_t address, size_t size) 
 {
-    uint32_t value = 0;
-    if (!m_Pci.MMIORead(address, &value, size)) {
-        Log(LogLevel::Warning, "Unhandled MMIO Read (Addr = %08X)\n", (uint32_t)address);
-    }
-    return value;
+   uint32_t value = 0;
+   if (!m_Pci.MMIORead(address, &value, size))
+      Log(LogLevel::Warning, "Unhandled MMIO Read (Addr = %08X)\n", (uint32_t)address);
+   return value;
 }
 
 void Xbox::MMIOWrite(uint64_t address, size_t size, uint64_t value) 
 {
-    if (!m_Pci.MMIOWrite(address, value, size)) {
-        Log(LogLevel::Warning, "Unhandled MMIO Write (Addr = %08X, Value = %08X)\n", address, (uint32_t)value);
-    }
+   if (!m_Pci.MMIOWrite(address, value, size))
+      Log(LogLevel::Warning, "Unhandled MMIO Write (Addr = %08X, Value = %08X)\n", address, (uint32_t)value);
 }
