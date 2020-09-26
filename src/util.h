@@ -17,20 +17,20 @@ constexpr size_t array_size(T(&)[N]) {
     return N;
 }
 
+#if !defined(__linux__)
 static int ffs(int value)
 {
     int bit;
 
-    if (value == 0) {
+    if (value == 0)
         return 0;
-    }
 
-    for (bit = 1; !(value & 1); bit++) {
+    for (bit = 1; !(value & 1); bit++)
         value >>= 1;
-    }
 
     return bit;
 }
+#endif
 
 #define GET_MASK(v, mask) (((v) & (mask)) >> (ffs(mask)-1))
 #define SET_MASK(v, mask, val)                            \
