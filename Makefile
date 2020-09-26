@@ -43,7 +43,7 @@ prefix := /usr
 libdir := $(prefix)/lib
 
 LIBRETRO_INSTALL_DIR := libretro
-TARGET_NAME := directx_box
+TARGET_NAME := directxbox
 
 # GIT HASH
 GIT_VERSION := " $(shell git rev-parse --short HEAD || echo unknown)"
@@ -494,7 +494,7 @@ else
    CC ?= gcc
    CXX ?= g++
    SHARED := -shared -Wl,--no-undefined -Wl,--version-script=link.T
-   LDFLAGS += -static-libgcc -static-libstdc++ -lwinmm
+   LDFLAGS += -static-libgcc -static-libstdc++ -lwinmm -lversion
 WINDOWS_VERSION=1
 
 endif
@@ -533,7 +533,7 @@ LDFLAGS += $(fpic) $(SHARED)
 FLAGS += $(fpic) $(NEW_GCC_FLAGS)
 FLAGS += $(INCFLAGS) $(INCFLAGS_PLATFORM)
 
-FLAGS += $(ENDIANNESS_DEFINES) $(WARNINGS) $(CORE_DEFINE) -DSTDC_HEADERS -D__STDC_LIMIT_MACROS -D__LIBRETRO__ $(EXTRA_INCLUDES) $(SOUND_DEFINE)
+FLAGS += $(ENDIANNESS_DEFINES) $(WARNINGS) $(CORE_DEFINE) -DSTDC_HEADERS -D__STDC_LIMIT_MACROS -D__LIBRETRO__ -std=c++1z $(EXTRA_INCLUDES) $(SOUND_DEFINE)
 
 ifneq (,$(findstring msvc,$(platform)))
 FLAGS += -DINLINE="_inline"
@@ -591,7 +591,6 @@ else ifeq ($(STATIC_LINKING), 1)
 	$(AR) rcs $@ $(OBJECTS)
 else
 	$(LD) $(LINKOUT)$@ $^ $(LDFLAGS) $(LIBS)
-	echo "LD $(TARGET)"
 endif
 
 %.o: %.cpp

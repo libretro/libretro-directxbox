@@ -3,7 +3,7 @@
 #include "util.h"
 
 #include <cassert>
-
+#include <cstring>
 
 PCIDevice::PCIDevice(uint8_t type, uint16_t vendorID, uint16_t deviceID,
     uint8_t revisionID, uint8_t classID, uint8_t subclass, uint8_t progIF,

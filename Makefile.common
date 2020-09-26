@@ -5,14 +5,46 @@ DEPS_DIR     	  := $(CORE_DIR)/deps
 LIBRETRO_COMM_DIR := $(CORE_DIR)/libretro-common
 
 INCFLAGS := -I$(CORE_DIR)/src \
-				-I$(CORE_DIR)/src/libretro
+				-I$(CORE_DIR)/src/libretro \
+				-I$(CORE_DIR)/deps/virt86/modules/virt86/include \
+				-I$(CORE_DIR)/deps/virt86/modules/core/include \
+				-I$(CORE_DIR)/deps/virt86/modules/haxm/include \
+				-I$(CORE_DIR)/deps/virt86/modules/haxm/src/common
 
+FLAGS += -DVIRT86_HAXM_AVAILABLE
 SOURCES_C   :=
 SOURCES_CXX :=
 
 ifneq (,$(findstring msvc2003,$(platform)))
 	INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc
 endif
+
+ifeq ($(WINDOWS_VERSION), 1)
+INCFLAGS += -I$(CORE_DIR)/deps/virt86/modules/sys/windows/include \
+				-I$(CORE_DIR)/deps/virt86/modules/haxm/src/windows
+SOURCES_CXX += \
+					$(CORE_DIR)/deps/virt86/modules/haxm/src/windows/haxm_sys_platform.cpp \
+					$(CORE_DIR)/deps/virt86/modules/haxm/src/windows/haxm_sys_vm.cpp \
+					$(CORE_DIR)/deps/virt86/modules/haxm/src/windows/haxm_sys_vp.cpp \
+					$(CORE_DIR)/deps/virt86/modules/sys/windows/src/version_info.cpp \
+					$(CORE_DIR)/deps/virt86/modules/sys/windows/src/pch.cpp
+endif
+
+SOURCES_CXX += \
+					$(CORE_DIR)/deps/virt86/modules/core/src/pch.cpp \
+					$(CORE_DIR)/deps/virt86/modules/core/src/platform/platform.cpp \
+					$(CORE_DIR)/deps/virt86/modules/core/src/util/host_info.cpp \
+					$(CORE_DIR)/deps/virt86/modules/core/src/vm/vm.cpp \
+					$(CORE_DIR)/deps/virt86/modules/core/src/vp/gdt.cpp \
+					$(CORE_DIR)/deps/virt86/modules/core/src/vp/idt.cpp \
+					$(CORE_DIR)/deps/virt86/modules/core/src/vp/vp.cpp \
+					\
+					$(CORE_DIR)/deps/virt86/modules/haxm/src/common/haxm_helpers.cpp \
+					$(CORE_DIR)/deps/virt86/modules/haxm/src/common/haxm_platform.cpp \
+					$(CORE_DIR)/deps/virt86/modules/haxm/src/common/haxm_platform_impl.cpp \
+					$(CORE_DIR)/deps/virt86/modules/haxm/src/common/haxm_vm.cpp \
+					$(CORE_DIR)/deps/virt86/modules/haxm/src/common/haxm_vp.cpp \
+					$(CORE_DIR)/deps/virt86/modules/haxm/src/common/pch.cpp
 
 SOURCES_CXX += \
 					$(CORE_DIR)/src/xbox.cpp \
